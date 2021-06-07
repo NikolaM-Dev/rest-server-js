@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const connect = require('../database/connect');
 
 class Server {
   constructor() {
@@ -9,8 +10,13 @@ class Server {
 
     this.usersPath = '/api/users';
 
+    this.dbConnection();
     this.middlewares();
     this.routes();
+  }
+
+  async dbConnection() {
+    await connect();
   }
 
   middlewares() {
