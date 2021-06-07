@@ -1,20 +1,19 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 
 class Server {
   constructor() {
     this.app = express();
     this.port = process.env.PORT;
-
-    // Middlewares
     this.middlewares();
-
     this.routes();
   }
 
   middlewares() {
-    this.app.use(express.static('public'));
+    this.app.use(cors());
     this.app.use(morgan('dev'));
+    this.app.use(express.static('public'));
   }
 
   routes() {
@@ -31,7 +30,7 @@ class Server {
     });
 
     this.app.post('/api', (_req, res) => {
-      res.json({
+      res.status(201).json({
         msg: 'post API',
       });
     });
