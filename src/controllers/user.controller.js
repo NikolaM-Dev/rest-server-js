@@ -1,5 +1,4 @@
 const { response, request } = require('express');
-const { validationResult } = require('express-validator');
 
 const User = require('../models/user.model');
 
@@ -14,9 +13,6 @@ const getUser = (_req = request, res = response) => {
 };
 
 const postUser = async (req = request, res = response) => {
-  const erros = validationResult(req);
-  if (!erros.isEmpty()) return res.status(400).json(erros);
-
   const { name, email, password, role } = req.body;
   const user = new User({ name, email, password, role });
 
