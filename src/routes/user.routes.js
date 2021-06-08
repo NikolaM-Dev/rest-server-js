@@ -9,6 +9,7 @@ const {
   deleteUser,
 } = require('../controllers/user.controller');
 const validateFields = require('../middlewares/validateFields');
+const Role = require('../models/role.model');
 
 const router = Router();
 
@@ -23,7 +24,12 @@ router.post(
       'Password is required and must be longer than 6 characters'
     ).isLength({ min: 6 }),
     check('email', 'Email is not valid').isEmail(),
-    check('role', 'Invalid role').isIn(['ADMIN_ROLE', 'USER_ROLE']),
+    // check('role', 'Invalid role').isIn(['ADMIN_ROLE', 'USER_ROLE']),
+    check('role').custom(async (role = '') => {
+      const roleExists = await Role.findOne({ role });
+      if (!roleExists)
+        throw new Error(`Role ${role} is not registered in the database`);
+    }),
     validateFields,
   ],
   postUser
