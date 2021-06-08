@@ -8,7 +8,7 @@ const {
   putUser,
   deleteUser,
 } = require('../controllers/user.controller');
-const { isValidRole } = require('../helpers/dbValidators');
+const { isValidRole, emailExists } = require('../helpers/dbValidators');
 const validateFields = require('../middlewares/validateFields');
 
 const router = Router();
@@ -24,7 +24,7 @@ router.post(
       'Password is required and must be longer than 6 characters'
     ).isLength({ min: 6 }),
     check('email', 'Email is not valid').isEmail(),
-    // check('role', 'Invalid role').isIn(['ADMIN_ROLE', 'USER_ROLE']),
+    check('email').custom(emailExists),
     check('role').custom(isValidRole),
     validateFields,
   ],

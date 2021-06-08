@@ -16,10 +16,6 @@ const postUser = async (req = request, res = response) => {
   const { name, email, password, role } = req.body;
   const user = new User({ name, email, password, role });
 
-  const emailExists = await User.findOne({ email });
-  if (emailExists)
-    return res.status(400).json({ error: 'Email already exists' });
-
   // encrypting password
   user.password = await User.encryptPassword(user.password);
 
