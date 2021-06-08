@@ -2,10 +2,10 @@ const { response, request } = require('express');
 
 const User = require('../models/user.model');
 
-const getUsers = (req = request, res = response) => {
-  const { name = 'No name', apiKey, page = 1, limit = 10 } = req.query;
-
-  res.json({ msg: 'get API - Controller', name, apiKey, page, limit });
+const getUsers = async (_req = request, res = response) => {
+  // const { name = 'No name', apiKey, page = 1, limit = 10 } = req.query;
+  const users = await User.find({});
+  return res.json({ users });
 };
 
 const getUser = (_req = request, res = response) => {
@@ -24,10 +24,14 @@ const postUser = async (req = request, res = response) => {
   return res.status(201).json({ user });
 };
 
-const putUser = (req = request, res = response) => {
+const putUser = async (req = request, res = response) => {
   const { id } = req.params;
+  const { password, google, email, ...userData } = req.body;
 
-  res.json({ msg: 'put API - Controller', id });
+  if (password) userData.password = await User.encryptPassword(password);
+  const user = await User.findByIdAndUpdate(id, userData, { new: true });
+
+  return res.json({ user });
 };
 
 const deleteUser = (req = request, res = response) => {
