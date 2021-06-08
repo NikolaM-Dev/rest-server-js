@@ -11,6 +11,11 @@ const UserSchema = new Schema({
   google: { type: Boolean, default: false },
 });
 
+UserSchema.methods.toJSON = function () {
+  const { __v, password, ...user } = this.toObject();
+  return user;
+};
+
 UserSchema.statics.encryptPassword = async (password) => {
   const salt = bcryptjs.genSaltSync();
   return await bcryptjs.hashSync(password, salt);
