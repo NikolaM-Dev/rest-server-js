@@ -8,11 +8,17 @@ const isValidRole = async (role = '') => {
 };
 
 const emailExists = async (email = '') => {
-  const userEmail = await User.findOne({ email });
-  if (userEmail) throw new Error(`Email ${email} already exists`);
+  const userExists = await User.findOne({ email });
+  if (userExists) throw new Error(`Email ${email} already exists`);
+};
+
+const userExistById = async (_id) => {
+  const userExists = await User.findById(_id);
+  if (!userExists) throw new Error(`ID ${_id} does not exist`);
 };
 
 module.exports = {
   isValidRole,
   emailExists,
+  userExistById,
 };

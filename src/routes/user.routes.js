@@ -8,13 +8,19 @@ const {
   putUser,
   deleteUser,
 } = require('../controllers/user.controller');
-const { isValidRole, emailExists } = require('../helpers/dbValidators');
+const {
+  isValidRole,
+  emailExists,
+  userExistById,
+} = require('../helpers/dbValidators');
 const validateFields = require('../middlewares/validateFields');
 
 const router = Router();
 
 router.get('/', getUsers);
+
 router.get('/:id', getUser);
+
 router.post(
   '/',
   [
@@ -30,7 +36,18 @@ router.post(
   ],
   postUser
 );
-router.put('/:id', putUser);
+
+router.put(
+  '/:id',
+  [
+    check('id', 'ID is not valid').isMongoId(),
+    check('id').custom(userExistById),
+    check('role').custom(isValidRole),
+    validateFields,
+  ],
+  putUser
+);
+
 router.delete('/:id', deleteUser);
 
 module.exports = router;
