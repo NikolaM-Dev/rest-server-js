@@ -48,6 +48,10 @@ router.put(
   putUser
 );
 
-router.delete('/:id', deleteUser);
+router.delete(
+  '/:id',
+  [check('id').isMongoId(), check('id').custom(userExistById), validateFields],
+  deleteUser
+);
 
 module.exports = router;

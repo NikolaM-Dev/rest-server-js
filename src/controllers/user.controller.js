@@ -41,10 +41,11 @@ const putUser = async (req = request, res = response) => {
   return res.json({ user: updatedUser });
 };
 
-const deleteUser = (req = request, res = response) => {
+const deleteUser = async (req = request, res = response) => {
   const { id } = req.params;
+  const user = await User.findByIdAndUpdate(id, { state: false });
 
-  res.json({ msg: 'delete API - Controller', id });
+  res.json(user);
 };
 
 module.exports = {
