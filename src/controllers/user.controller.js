@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user.model');
 
 const getUsers = async (req = request, res = response) => {
-  let { limit = 5, since = 0 } = req.query;
+  const { limit = 5, since = 0 } = req.query;
   const query = { state: true };
 
   const [total, users] = await Promise.all([
@@ -15,8 +15,16 @@ const getUsers = async (req = request, res = response) => {
   return res.json({ total, users });
 };
 
-const getUser = (_req = request, res = response) => {
-  res.json({ msg: 'get API - Controller' });
+const getUser = async (req = request, res = response) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+
+  if (user.state === false)
+    return res
+      .status(404)
+      .json({ error: 'User does not exist in the database' });
+
+  return res.json(user);
 };
 
 const postUser = async (req = request, res = response) => {
@@ -28,7 +36,7 @@ const postUser = async (req = request, res = response) => {
 
   await user.save();
 
-  return res.status(201).json({ user });
+  res.status(201).json({ user });
 };
 
 const putUser = async (req = request, res = response) => {
@@ -45,7 +53,7 @@ const deleteUser = async (req = request, res = response) => {
   const { id } = req.params;
   const user = await User.findByIdAndUpdate(id, { state: false });
 
-  res.json(user);
+  return res.json(user);
 };
 
 module.exports = {
