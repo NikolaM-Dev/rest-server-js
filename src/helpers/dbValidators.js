@@ -12,9 +12,9 @@ const emailExists = async (email = '') => {
   if (userExists) throw new Error(`Email ${email} already exists`);
 };
 
-const userExistById = async (_id) => {
-  const userExists = await User.findById(_id);
-  if (!userExists) throw new Error(`ID ${_id} does not exist`);
+const userExistById = async (id) => {
+  const userExists = await User.findById(id);
+  if (!userExists) throw new Error(`ID ${id} does not exist`);
 };
 
 module.exports = {

@@ -3,9 +3,10 @@ const bcrypt = require('bcryptjs');
 
 const User = require('../models/user.model');
 
-const getUsers = async (_req = request, res = response) => {
-  // const { name = 'No name', apiKey, page = 1, limit = 10 } = req.query;
-  const users = await User.find({});
+const getUsers = async (req = request, res = response) => {
+  let { limit = 5, since = 0 } = req.query;
+  const users = await User.find().skip(Number(since)).limit(Number(limit));
+
   return res.json({ users });
 };
 
@@ -32,7 +33,7 @@ const putUser = async (req = request, res = response) => {
   if (password) user.password = await User.encryptPassword(password);
   const updatedUser = await User.findByIdAndUpdate(id, user, { new: true });
 
-  return res.json({ updatedUser });
+  return res.json({ user: updatedUser });
 };
 
 const deleteUser = (req = request, res = response) => {
