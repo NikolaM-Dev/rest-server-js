@@ -2,6 +2,7 @@ const { request, response } = require('express');
 const bcrypt = require('bcryptjs');
 
 const User = require('../models/user.model');
+const { generateJWT } = require('../helpers/generateJWT');
 
 const login = async (req = request, res = response) => {
   try {
@@ -22,7 +23,10 @@ const login = async (req = request, res = response) => {
         .status(400)
         .json('Email or Password are not correct - password');
 
-    return res.json({ email, password });
+    // jwt generated
+    const token = await generateJWT(user.id);
+
+    return res.json({ user, token });
   } catch (err) {
     console.error(err);
     return res.status(500).json({
