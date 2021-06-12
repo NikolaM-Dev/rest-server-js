@@ -18,9 +18,7 @@ UserSchema.methods.toJSON = function () {
 
 UserSchema.statics.encryptPassword = async (password) => {
   const salt = bcrypt.genSaltSync();
-  return await bcrypt.hashSync(password, salt);
+  return bcrypt.hashSync(password, salt);
 };
-
-UserSchema.statics.comparePassword = async (password, candidatePassword) => {};
 
 module.exports = model('User', UserSchema);
