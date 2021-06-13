@@ -1,5 +1,4 @@
 const { request, response } = require('express');
-const bcrypt = require('bcryptjs');
 
 const User = require('../models/user.model');
 const { generateJWT } = require('../helpers/generateJWT');
@@ -16,7 +15,7 @@ const login = async (req = request, res = response) => {
     if (!user.state)
       return res.status(400).json('Email or Password are not correct - state');
 
-    const validPassword = bcrypt.compareSync(password, user.password);
+    const validPassword = await User.comparePassword(password, user.password);
 
     if (!validPassword)
       return res
@@ -35,6 +34,4 @@ const login = async (req = request, res = response) => {
   }
 };
 
-module.exports = {
-  login,
-};
+module.exports = { login };

@@ -1,5 +1,5 @@
-const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { model, Schema } = require('mongoose');
 
 const UserSchema = new Schema({
   name: { type: String, required: [true, 'Name is required'] },
@@ -12,13 +12,18 @@ const UserSchema = new Schema({
 });
 
 UserSchema.methods.toJSON = function () {
-  const { __v, password, ...user } = this.toObject();
+  const { __v, password, _id, ...user } = this.toObject();
+  user.uid = _id;
   return user;
 };
 
 UserSchema.statics.encryptPassword = async (password) => {
   const salt = bcrypt.genSaltSync();
   return bcrypt.hashSync(password, salt);
+};
+
+UserSchema.statics.comparePassword = async (password, receivedPassword) => {
+  return bcrypt.compareSync(password, receivedPassword);
 };
 
 module.exports = model('User', UserSchema);
