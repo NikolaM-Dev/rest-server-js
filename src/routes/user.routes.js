@@ -15,9 +15,7 @@ const {
   userExistById,
 } = require('../helpers/dbValidators');
 
-const validateFields = require('../middlewares/validateFields');
-const validateJWT = require('../middlewares/validateJWT');
-const { haveRole } = require('../middlewares/validateRoles');
+const { validateFields, validateJWT, haveRole } = require('../middlewares');
 
 const router = Router();
 
@@ -26,7 +24,6 @@ router.get('/', getUsers);
 router.get(
   '/:id',
   [check('id').isMongoId(), check('id').custom(userExistById), validateFields],
-
   getUser
 );
 
