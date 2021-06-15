@@ -6,7 +6,7 @@ const UserSchema = new Schema({
   email: { type: String, required: [true, 'Email is required'], unique: true },
   password: { type: String, required: [true, 'Password is required'] },
   img: { type: String },
-  role: { type: String, required: true },
+  role: { type: String, required: true, default: 'USER_ROLE' },
   state: { type: Boolean, default: true },
   google: { type: Boolean, default: false },
 });

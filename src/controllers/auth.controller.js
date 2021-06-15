@@ -2,6 +2,7 @@ const { request, response } = require('express');
 
 const User = require('../models/user.model');
 const { generateJWT } = require('../helpers/generateJWT');
+const { googleVerify } = require('../helpers/googleVerify');
 
 const login = async (req = request, res = response) => {
   try {
@@ -34,12 +35,23 @@ const login = async (req = request, res = response) => {
   }
 };
 
-const googleSignin = (req = request, res = response) => {
+const googleSignin = async (req = request, res = response) => {
   const { id_token } = req.body;
-  res.json({
-    msg: 'Hi, from google signin',
-    id_token,
-  });
+
+  try {
+    const googleUser = await googleVerify(id_token);
+    console.log(googleUser);
+
+    return res.json({
+      msg: 'Hi, from google signin',
+      googleUser,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({
+      msg: 'Google token is not valid',
+    });
+  }
 };
 
 module.exports = {
