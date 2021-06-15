@@ -39,12 +39,32 @@ const googleSignin = async (req = request, res = response) => {
   const { id_token } = req.body;
 
   try {
-    const googleUser = await googleVerify(id_token);
-    console.log(googleUser);
+    const { name, email, img } = await googleVerify(id_token);
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      const data = {
+        name,
+        email,
+        password: 'google',
+        img,
+        google: true,
+      };
+
+      user = new User(data);
+      await user.save();
+    }
+
+    if (!user.state)
+      return res.status(401).json({
+        msg: 'talk to the administrator, user blocked',
+      });
+
+    const token = await generateJWT(user.id);
 
     return res.json({
-      msg: 'Hi, from google signin',
-      googleUser,
+      user,
+      token,
     });
   } catch (err) {
     console.error(err);
