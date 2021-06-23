@@ -1,5 +1,5 @@
 const { request, response } = require('express');
-const { Category } = require('../models/');
+const { Category } = require('../models');
 
 const getCategories = async (req = request, res = response) => {
   const { limit = 5, since = 0 } = req.body;
@@ -23,7 +23,7 @@ const getCategory = async (req = request, res = response) => {
   if (category.state === false)
     return res
       .status(404)
-      .json({ msg: 'Category doest not exist in the database' });
+      .json({ msg: 'Category does not exist in the database' });
 
   return res.json(category);
 };
@@ -50,16 +50,16 @@ const createCategory = async (req = request, res = response) => {
 
 const updateCategory = async (req = request, res = response) => {
   const { id } = req.params;
-  const { state, user, ...category } = req.body;
+  const { state, user, ...data } = req.body;
 
-  category.name = category.name.toUpperCase();
-  category.user = req.user._id;
+  data.name = data.name.toUpperCase();
+  data.user = req.user._id;
 
-  const updatedCategory = await Category.findByIdAndUpdate(id, category, {
+  const category = await Category.findByIdAndUpdate(id, data, {
     new: true,
   }).populate('user', { name: 1 });
 
-  return res.json({ category: updatedCategory });
+  return res.json({ category });
 };
 
 const deleteCategory = async (req = request, res = response) => {

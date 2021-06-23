@@ -8,26 +8,29 @@ const {
   isAdminRole,
 } = require('../middlewares');
 const {
-  getCategories,
-  getCategory,
-  deleteCategory,
-  createCategory,
-  updateCategory,
-} = require('../controllers/categories.controller');
-const { categoryExistsById } = require('../helpers/dbValidators');
+  getProducts,
+  getProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} = require('../controllers/product.controller');
+const {
+  productExistsById,
+  categoryExistsById,
+} = require('../helpers/dbValidators');
 
 const router = Router();
 
-router.get('/', getCategories);
+router.get('/', getProducts);
 
 router.get(
   '/:id',
   [
     check('id', 'ID is not valid').isMongoId(),
-    check('id').custom(categoryExistsById),
+    check('id').custom(productExistsById),
     validateFields,
   ],
-  getCategory
+  getProduct
 );
 
 router.post(
@@ -36,9 +39,11 @@ router.post(
     validateJWT,
     haveRole('USER_ROLE', 'ADMIN_ROLE', 'SALES_ROLE'),
     check('name', 'Name is required').not().isEmpty(),
+    check('category', 'ID is not valid').isMongoId(),
+    check('category').custom(categoryExistsById),
     validateFields,
   ],
-  createCategory
+  createProduct
 );
 
 router.put(
@@ -47,11 +52,10 @@ router.put(
     validateJWT,
     check('id', 'ID is not valid').isMongoId(),
     haveRole('USER_ROLE', 'ADMIN_ROLE', 'SALES_ROLE'),
-    check('name', 'The name is required').not().isEmpty(),
-    check('id').custom(categoryExistsById),
+    check('id').custom(productExistsById),
     validateFields,
   ],
-  updateCategory
+  updateProduct
 );
 
 router.delete(
@@ -60,10 +64,10 @@ router.delete(
     validateJWT,
     isAdminRole,
     check('id', 'ID is not valid').isMongoId(),
-    check('id').custom(categoryExistsById),
+    check('id').custom(productExistsById),
     validateFields,
   ],
-  deleteCategory
+  deleteProduct
 );
 
 module.exports = router;
