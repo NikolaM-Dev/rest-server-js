@@ -3,9 +3,9 @@ const { isValidObjectId } = require('mongoose');
 
 const { User, Category, Product } = require('../models');
 
-const allowedCollections = ['users', 'categories', 'products', 'roles'];
-
 const areAllowedCollections = (collection = '', res = response) => {
+  const allowedCollections = ['users', 'categories', 'products', 'roles'];
+
   if (!allowedCollections.includes(collection))
     return res.status(400).json({
       msg: `The allowed collections are ${allowedCollections}`,
