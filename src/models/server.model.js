@@ -1,6 +1,7 @@
 const cors = require('cors');
 const express = require('express');
 const morgan = require('morgan');
+const fileUpload = require('express-fileupload');
 
 const connect = require('../database/connect');
 
@@ -14,6 +15,7 @@ class Server {
       categories: '/api/categories',
       products: '/api/products',
       search: '/api/search',
+      uploads: '/api/uploads',
       users: '/api/users',
     };
 
@@ -31,6 +33,12 @@ class Server {
     this.app.use(express.json());
     this.app.use(express.static('public'));
     this.app.use(morgan('dev'));
+    this.app.use(
+      fileUpload({
+        useTempFiles: true,
+        tempFileDir: '/tmp/',
+      })
+    );
   }
 
   routes() {
@@ -38,6 +46,7 @@ class Server {
     this.app.use(this.paths.categories, require('../routes/category.routes'));
     this.app.use(this.paths.products, require('../routes/product.routes'));
     this.app.use(this.paths.search, require('../routes/search.routes'));
+    this.app.use(this.paths.uploads, require('../routes/upload.routes'));
     this.app.use(this.paths.users, require('../routes/user.routes'));
   }
 
