@@ -1,14 +1,19 @@
 const { request, response } = require('express');
+
 const {
-  areAllowedCollections,
   searchUser,
   searchCategory,
   searchProduct,
 } = require('../helpers/searchCollections');
 
 const search = (req = request, res = response) => {
+  const allowedCollections = ['users', 'categories', 'products', 'roles'];
   const { collection, term } = req.params;
-  areAllowedCollections(collection, res);
+
+  if (!allowedCollections.includes(collection))
+    return res.status(400).json({
+      msg: `Collection ${collection} is not allowed - Allowed collections ${allowedCollections}`,
+    });
 
   const SEARCH_HANDLERS = {
     users: () => searchUser(term, res),

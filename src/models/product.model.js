@@ -8,6 +8,7 @@ const ProductSchema = new Schema({
   price: { type: Number, default: 0 },
   description: { type: String, default: '' },
   available: { type: Boolean, default: true },
+  img: { type: String },
 });
 
 ProductSchema.methods.toJSON = function () {

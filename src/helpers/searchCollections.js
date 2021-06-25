@@ -3,15 +3,6 @@ const { isValidObjectId } = require('mongoose');
 
 const { User, Category, Product } = require('../models');
 
-const areAllowedCollections = (collection = '', res = response) => {
-  const allowedCollections = ['users', 'categories', 'products', 'roles'];
-
-  if (!allowedCollections.includes(collection))
-    return res.status(400).json({
-      msg: `The allowed collections are ${allowedCollections}`,
-    });
-};
-
 const searchUser = async (term = '', res = response) => {
   const isMongoID = isValidObjectId(term);
 
@@ -78,7 +69,6 @@ const searchProduct = async (term = '', res = response) => {
 };
 
 module.exports = {
-  areAllowedCollections,
   searchCategory,
   searchProduct,
   searchUser,
