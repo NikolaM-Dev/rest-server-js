@@ -1,3 +1,6 @@
+const path = require('path');
+const fs = require('fs');
+
 const { request, response } = require('express');
 
 const { uploadFile } = require('../helpers');
@@ -40,6 +43,14 @@ const updateImage = async (req = request, res = response) => {
 
     default:
       return res.status(500).json({ msg: 'I forgot to validate this' });
+  }
+
+  if (model.img) {
+    const imagePath = path.join(path.resolve('uploads'), collection, model.img);
+
+    if (fs.existsSync(imagePath)) {
+      fs.unlinkSync(imagePath);
+    }
   }
 
   const name = await uploadFile(req.files, undefined, collection);
