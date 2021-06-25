@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const uploadFile = (
   files,
-  allowedExtensions = ['png', 'jgp', 'jpeg', 'gif'],
+  allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'],
   dir = ''
 ) => {
   return new Promise((resolve, reject) => {
